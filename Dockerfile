@@ -15,7 +15,7 @@ RUN pip install pipenv
 COPY Pipfile* .
 RUN pipenv install --system --dev
 
-COPY . .
+COPY ./app .
 
 RUN addgroup app && adduser -S -G app app
 USER app
