@@ -55,4 +55,7 @@ urlpatterns = [
     # required for debug toolbar
     path("__debug__/", include("debug_toolbar.urls")),
 
+    # url for course app
+    path('store/', include('course.urls'))
+
 ]
