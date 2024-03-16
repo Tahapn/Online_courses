@@ -8,6 +8,8 @@ from . import views
 router = routers.SimpleRouter()
 
 router.register('courses', views.CoursesViewSet)
+router.register('teacher-courses', views.TeacherCoursesViewSet,
+                basename='teacher')
 
 urlpatterns = [
     path('teacher-profile', views.TeacherProfileView.as_view())
