@@ -1,3 +1,4 @@
+from uuid import uuid4
 from django.db import models
 from django.conf import settings
 # Create your models here.
@@ -14,4 +15,20 @@ class Course(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     price = models.PositiveIntegerField()
-    teacher = models.OneToOneField(Teacher, on_delete=models.PROTECT)
+    teacher = models.ForeignKey(Teacher, on_delete=models.PROTECT)
+
+
+class Cart(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid4)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(
+        Cart, on_delete=models.CASCADE, related_name='items')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = [
+            ['cart', 'course'],
+        ]

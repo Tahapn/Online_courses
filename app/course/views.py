@@ -1,10 +1,11 @@
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericViewSet
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin, DestroyModelMixin
 from .permissions import IsTeacher
 from . import serializers
 from . import models
@@ -59,3 +60,20 @@ class TeacherCoursesViewSet(ModelViewSet):
     serializer_class = serializers.CourseSerializer
 
     permission_classes = [IsTeacher]
+
+
+class CartViewSet(RetrieveModelMixin, CreateModelMixin, DestroyModelMixin, GenericViewSet):
+    queryset = models.Cart.objects.all()
+    serializer_class = serializers.CartSerializer
+
+
+class CartItemViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin, DestroyModelMixin, GenericViewSet):
+
+    def get_queryset(self):
+        return models.CartItem.objects.filter(cart=self.kwargs['cart_pk'])
+
+    def get_serializer_context(self):
+
+        return {'cart': self.kwargs['cart_pk']}
+
+    serializer_class = serializers.CartItemSerializer
