@@ -77,3 +77,19 @@ class CartItemViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin, Dest
         return {'cart': self.kwargs['cart_pk']}
 
     serializer_class = serializers.CartItemSerializer
+
+
+class OrderViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin, GenericViewSet):
+    def get_queryset(self):
+        return models.Order.objects.filter(user=self.request.user.id)
+
+    def get_serializer_context(self):
+        return {'user': self.request.user}
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return serializers.OrderPOSTSerializer
+        else:
+            return serializers.OrderGETserializer
+
+    permission_classes = [IsAuthenticated]

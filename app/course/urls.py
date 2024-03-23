@@ -11,7 +11,7 @@ router.register('courses', views.CoursesViewSet)
 router.register('teacher-courses', views.TeacherCoursesViewSet,
                 basename='teacher')
 router.register('carts', views.CartViewSet)
-
+router.register('orders', views.OrderViewSet, basename='orders')
 
 cartitem_route = routers.NestedSimpleRouter(router, 'carts', lookup='cart')
 cartitem_route.register('items', views.CartItemViewSet, basename='cart-items')

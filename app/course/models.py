@@ -32,3 +32,16 @@ class CartItem(models.Model):
         unique_together = [
             ['cart', 'course'],
         ]
+
+
+class Order(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.PROTECT)
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(
+        Order, on_delete=models.CASCADE, related_name='orderitems')
+    course = models.ForeignKey(Course, on_delete=models.PROTECT)
+    price = models.PositiveIntegerField()
