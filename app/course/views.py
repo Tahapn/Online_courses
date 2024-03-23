@@ -74,7 +74,7 @@ class CartItemViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin, Dest
 
     def get_serializer_context(self):
 
-        return {'cart': self.kwargs['cart_pk']}
+        return {'cart': self.kwargs['cart_pk'], 'user': self.request.user}
 
     serializer_class = serializers.CartItemSerializer
 

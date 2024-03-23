@@ -39,7 +39,25 @@ class CartItemSerializer(serializers.ModelSerializer):
         cart_id = self.context['cart']
         return models.CartItem.objects.create(cart_id=cart_id, **validated_data)
 
+    def validate_course(self, course):
+
+        orders = models.Order.objects.filter(user=self.context['user'])
+
+        # checks if user already owns the course
+        for item in orders:
+            if item.orderitems.filter(course=course).exists():
+                raise serializers.ValidationError(
+                    'You already own this course.')
+
+        # checks if user already has the course in the cart
+        if models.CartItem.objects.filter(cart=self.context['cart'], course=course).exists():
+            raise serializers.ValidationError('Course is already in cart')
+
+        else:
+            return course
+
     # each course price
+
     def get_price(self, obj: models.CartItem):
         return obj.course.price
 
