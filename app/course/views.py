@@ -17,7 +17,13 @@ class CoursesViewSet(ReadOnlyModelViewSet):
 
 
 class TeacherProfileView(APIView):
-    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method in ['GET', 'PUT', 'PATCH', 'DELETE']:
+            self.permission_classes = [IsTeacher]
+        elif self.request.method == 'POST':
+            self.permission_classes = [IsAuthenticated]
+        return super(TeacherProfileView, self).get_permissions()
 
     def get(self, request):
         user = self.request.user.id
@@ -36,12 +42,20 @@ class TeacherProfileView(APIView):
             return Response('Teacher profile already exists. no need to send post request', status.HTTP_400_BAD_REQUEST)
 
     def put(self, request):
-        teacher = get_object_or_404(models.Teacher, user=self.request.user.id)
+        teacher = models.Teacher.objects.get(user=self.request.user)
         serializer = serializers.TeacherSerializer(
             teacher, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status.HTTP_200_OK)
+
+    def delete(self, request):
+        teacher = models.Teacher.objects.get(user=self.request.user)
+        if teacher.course_set.count() > 0:
+            return Response({'error': 'you have some courses. you can\'t delete your profile!!'})
+        else:
+            teacher.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get_serializer_context(self, request):
         return {'user': self.request.user.id}
@@ -81,7 +95,7 @@ class CartItemViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin, Dest
 
 class OrderViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin, GenericViewSet):
     def get_queryset(self):
-        return models.Order.objects.filter(user=self.request.user.id)
+        return models.Order.objects.prefetch_related('orderitems').filter(user=self.request.user.id)
 
     def get_serializer_context(self):
         return {'user': self.request.user}

@@ -148,3 +148,13 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=5000),
     'REFRESH_TOKEN_LIFETIME': timedelta(minutes=360),
 }
+
+# fix debug toolbar not showing
+if DEBUG:
+
+    def show_toolbar(request):
+        return True
+
+    DEBUG_TOOLBAR_CONFIG = {
+        'SHOW_TOOLBAR_CALLBACK': show_toolbar,
+    }
