@@ -18,6 +18,13 @@ class Course(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.PROTECT)
 
 
+class CourseFiles(models.Model):
+    title = models.CharField(max_length=255)
+    file = models.FileField(upload_to='files')
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, related_name='files')
+
+
 class Cart(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -16,6 +16,11 @@ router.register('orders', views.OrderViewSet, basename='orders')
 cartitem_route = routers.NestedSimpleRouter(router, 'carts', lookup='cart')
 cartitem_route.register('items', views.CartItemViewSet, basename='cart-items')
 
+course_file_route = routers.NestedSimpleRouter(
+    router, 'teacher-courses', lookup='course')
+course_file_route.register(
+    'files', views.CourseFileViewSet, basename='course-files')
+
 urlpatterns = [
     path('teacher-profile/', views.TeacherProfileView.as_view())
-] + router.urls + cartitem_route.urls
+] + router.urls + cartitem_route.urls + course_file_route.urls

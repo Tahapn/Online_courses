@@ -20,6 +20,19 @@ class CourseSerializer(serializers.ModelSerializer):
         return models.Course.objects.create(teacher=teacher, **validated_data)
 
 
+class CourseFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CourseFiles
+        fields = ['id', 'title', 'file', 'course']
+        extra_kwargs = {
+            'course': {'read_only': True}
+        }
+
+    def create(self, validated_data):
+        course = self.context['course']
+        return models.CourseFiles.objects.create(course_id=course, **validated_data)
+
+
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Teacher

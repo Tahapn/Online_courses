@@ -76,6 +76,19 @@ class TeacherCoursesViewSet(ModelViewSet):
     permission_classes = [IsTeacher]
 
 
+class CourseFileViewSet(ModelViewSet):
+
+    def get_queryset(self):
+        return models.CourseFiles.objects.filter(course=self.kwargs['course_pk'])
+
+    def get_serializer_context(self):
+        return {'course': self.kwargs['course_pk']}
+
+    serializer_class = serializers.CourseFileSerializer
+
+    permission_classes = [IsTeacher]
+
+
 class CartViewSet(RetrieveModelMixin, CreateModelMixin, DestroyModelMixin, GenericViewSet):
     queryset = models.Cart.objects.all()
     serializer_class = serializers.CartSerializer
