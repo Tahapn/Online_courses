@@ -108,7 +108,9 @@ class CartItemViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin, Dest
 
 class OrderViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin, GenericViewSet):
     def get_queryset(self):
-        return models.Order.objects.prefetch_related('orderitems').filter(user=self.request.user.id)
+        return models.Order.objects \
+            .prefetch_related('orderitems', 'orderitems__course', 'orderitems__course__files') \
+            .filter(user=self.request.user.id)
 
     def get_serializer_context(self):
         return {'user': self.request.user}

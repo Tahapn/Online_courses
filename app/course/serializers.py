@@ -91,10 +91,24 @@ class CartSerializer(serializers.ModelSerializer):
     total_price = serializers.SerializerMethodField('get_total_price')
 
 
+class FileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CourseFiles
+        fields = ['id', 'title', 'file']
+
+
+class CourseSerilizerOrderItems(serializers.ModelSerializer):
+    class Meta:
+        model = models.Course
+        fields = ['id', 'title', 'files']
+    files = FileSerializer(many=True)
+
+
 class OrderItemSerilizer(serializers.ModelSerializer):
     class Meta:
         model = models.OrderItem
         fields = ['id', 'course', 'price']
+    course = CourseSerilizerOrderItems()
 
 
 class OrderGETserializer(serializers.ModelSerializer):
