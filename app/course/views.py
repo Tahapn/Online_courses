@@ -6,7 +6,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin, DestroyModelMixin
+from rest_framework.filters import SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
 from .permissions import IsTeacher
+from .filters import PriceFilter
 from . import serializers
 from . import models
 
@@ -14,6 +17,10 @@ from . import models
 class CoursesViewSet(ReadOnlyModelViewSet):
     serializer_class = serializers.CourseSerializer
     queryset = models.Course.objects.all()
+
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_class = PriceFilter
+    search_fields = ['title', 'description']
 
 
 class TeacherProfileView(APIView):
@@ -26,8 +33,7 @@ class TeacherProfileView(APIView):
         return super(TeacherProfileView, self).get_permissions()
 
     def get(self, request):
-        user = self.request.user.id
-        teacher = get_object_or_404(models.Teacher, user=user)
+        teacher = get_object_or_404(models.Teacher, user=self.request.user.id)
         serializer = serializers.TeacherSerializer(teacher)
         return Response(serializer.data)
 

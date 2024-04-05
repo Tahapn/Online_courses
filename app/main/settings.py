@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'djoser',
     "debug_toolbar",
     'drf_yasg',
+    'django_filters',
 ]
 
 MIDDLEWARE = [

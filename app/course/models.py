@@ -1,6 +1,7 @@
 from uuid import uuid4
 from django.db import models
 from django.conf import settings
+from django.core.validators import MinValueValidator
 # Create your models here.
 
 
@@ -13,8 +14,9 @@ class Teacher(models.Model):
 
 class Course(models.Model):
     title = models.CharField(max_length=255)
+    slug = models.SlugField(null=True, blank=True, unique=True)
     description = models.TextField()
-    price = models.PositiveIntegerField()
+    price = models.PositiveIntegerField(validators=[MinValueValidator(1000)])
     teacher = models.ForeignKey(Teacher, on_delete=models.PROTECT)
 
 

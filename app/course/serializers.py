@@ -10,7 +10,7 @@ from . import models
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Course
-        fields = ['id', 'title', 'description', 'teacher', 'price']
+        fields = ['id', 'title', 'slug', 'description', 'teacher', 'price']
         extra_kwargs = {
             'teacher': {'read_only': True}
         }
