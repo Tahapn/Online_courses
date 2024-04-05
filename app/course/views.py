@@ -6,7 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin, DestroyModelMixin
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from .permissions import IsTeacher
 from .filters import PriceFilter
@@ -18,9 +19,14 @@ class CoursesViewSet(ReadOnlyModelViewSet):
     serializer_class = serializers.CourseSerializer
     queryset = models.Course.objects.all()
 
-    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = PriceFilter
     search_fields = ['title', 'description']
+    ordering_fields = ['price']
+
+    pagination_class = PageNumberPagination
+    pagination_class.page_size = 10
+    pagination_class.page_size_query_param = 'page_size'
 
 
 class TeacherProfileView(APIView):

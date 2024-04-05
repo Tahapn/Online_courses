@@ -14,7 +14,7 @@ class Teacher(models.Model):
 
 class Course(models.Model):
     title = models.CharField(max_length=255)
-    slug = models.SlugField(null=True, blank=True, unique=True)
+    slug = models.SlugField(null=True, blank=True,)
     description = models.TextField()
     price = models.PositiveIntegerField(validators=[MinValueValidator(1000)])
     teacher = models.ForeignKey(Teacher, on_delete=models.PROTECT)
