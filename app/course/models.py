@@ -11,6 +11,9 @@ class Teacher(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
+    def __str__(self) -> str:
+        return self.first_name + ' ' + self.last_name
+
 
 class Course(models.Model):
     title = models.CharField(max_length=255)
@@ -31,6 +34,9 @@ class Cart(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self) -> str:
+        return str(self.id)
+
 
 class CartItem(models.Model):
     cart = models.ForeignKey(
@@ -47,6 +53,9 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.PROTECT)
+
+    def __str__(self) -> str:
+        return str(self.id) + '.' + self.user.username
 
 
 class OrderItem(models.Model):
